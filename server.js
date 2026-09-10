@@ -505,7 +505,7 @@ caricaPartite();
   `);
 });
 
-app.gapp.get("/api/partite", async (req, res) => {
+app.get("/api/partite", async (req, res) => {
   try {
     const league = req.query.league || "135";
     const data = dataItalia();
