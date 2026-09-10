@@ -520,17 +520,24 @@ app.get("/api/partite", async (req, res) => {
     let partite = risultato.response || [];
     let prossime = false;
 
-    if (partite.length === 0) {
-      const urlProssime =
-        "https://v3.football.api-sports.io/fixtures" +
-        "?league=" + encodeURIComponent(league) +
-        "&season=" + new Date().getFullYear() +
-        "&next=5";
+  if (partite.length === 0) {
+  const fino = new Date(`${data}T00:00:00`);
+  fino.setDate(fino.getDate() + 30);
 
-      risultato = await apiFootball(urlProssime);
-      partite = risultato.response || [];
-      prossime = true;
-    }
+  const dataFino = fino.toISOString().slice(0, 10);
+
+  const urlProssime =
+    "https://v3.football.api-sports.io/fixtures" +
+    "?league=" + encodeURIComponent(league) +
+    "&season=" + new Date().getFullYear() +
+    "&from=" + data +
+    "&to=" + dataFino;
+
+  risultato = await apiFootball(urlProssime);
+  partite = risultato.response || [];
+  prossime = true;
+}
+    
 
     res.json({
       league: CAMPIONATI[league] || "Campionato",
