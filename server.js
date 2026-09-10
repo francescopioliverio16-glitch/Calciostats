@@ -553,7 +553,7 @@ app.get("/api/partite", async (req, res) => {
   } catch (errore) {
     console.error(errore);
     res.status(500).json({
-      error: "Errore API Football"
+    error: errore.message
     });
   }
 });
