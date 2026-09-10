@@ -506,9 +506,7 @@ caricaPartite();
 });
 
 app.get("/api/partite", async (req, res) => {
-
   try {
-
     const league = req.query.league || "135";
     const data = dataItalia();
 
@@ -526,9 +524,7 @@ app.get("/api/partite", async (req, res) => {
     });
 
   } catch (errore) {
-
     console.error(errore);
-
     res.status(500).json({
       error: "Errore API Football"
     });
