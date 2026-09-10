@@ -36,7 +36,13 @@ async function apiFootball(url) {
     throw new Error(`API Football: ${risposta.status}`);
   }
 
-  return await risposta.json();
+const dati = await risposta.json();
+
+if (dati.errors && Object.keys(dati.errors).length > 0) {
+  throw new Error(JSON.stringify(dati.errors));
+}
+
+return dati;
 }
 
 app.get("/", (req, res) => {
