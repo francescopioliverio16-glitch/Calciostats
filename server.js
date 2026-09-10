@@ -505,24 +505,38 @@ caricaPartite();
   `);
 });
 
-app.get("/api/partite", async (req, res) => {
+app.gapp.get("/api/partite", async (req, res) => {
   try {
     const league = req.query.league || "135";
     const data = dataItalia();
 
-    const url =
+    const urlOggi =
       "https://v3.football.api-sports.io/fixtures" +
       "?league=" + encodeURIComponent(league) +
       "&season=" + new Date().getFullYear() +
       "&date=" + data;
 
-    const risultato = await apiFootball(url);
+    let risultato = await apiFootball(urlOggi);
+    let partite = risultato.response || [];
+    let prossime = false;
+
+    if (partite.length === 0) {
+      const urlProssime =
+        "https://v3.football.api-sports.io/fixtures" +
+        "?league=" + encodeURIComponent(league) +
+        "&season=" + new Date().getFullYear() +
+        "&next=5";
+
+      risultato = await apiFootball(urlProssime);
+      partite = risultato.response || [];
+      prossime = true;
+    }
 
     res.json({
       league: CAMPIONATI[league] || "Campionato",
-      response: risultato.response || []
+      prossime: prossime,
+      response: partite
     });
-
   } catch (errore) {
     console.error(errore);
     res.status(500).json({
@@ -530,6 +544,8 @@ app.get("/api/partite", async (req, res) => {
     });
   }
 });
+
+    
 
 app.get("/api/statistiche", async (req, res) => {
 
